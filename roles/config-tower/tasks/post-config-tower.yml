@@ -1,5 +1,7 @@
+---
 - name: Create Homework Assignment project
-
+  command: | 
+    tower-cli project create -n "{{proj_name}}" --organization "{{org_name}}" --scm-type git --scm-url "{{scm_url}}"
 
 - name: Machine Credentail to connect to workstation using openstack.pub
   tower_credential:
@@ -8,8 +10,8 @@
     state: present
     kind: ssh
     tower_host: tower1.{{tower_GUID}}.example.opentlc.com
-    tower_username: admin
-    tower_password: r3dh4t1!
+    tower_username: "{{user_name}}"
+    tower_password: "{{password}}"
     ssh_key_data: "/root/.ssh/openstack.pem"
     username: cloud-user
 
@@ -19,7 +21,7 @@
 
 - name: Create Group in static inventory 
   command: |
-    tower-cli group create --inventory "{{static_inventory_name}}"  --name {{group_name}}
+    tower-cli group create --inventory "{{static_inventory_name}}"  --name "{{group_name}}"
 
 
 - name: Add tower host
@@ -40,7 +42,7 @@
 
 - name: Tower Creds key file
   tower_credential:
-    name: "{{ opentlc_cred_name }}"
+    name: "{{opentlc_cred_name}}"
     organization: Default
     state: present
     kind: ssh
@@ -49,10 +51,12 @@
     tower_password: r3dh4t1!
     tower_verify_ssl: no
     ssh_key_data: /root/.ssh/mykey.pem
-    username: "{{ opentlc_login }}"
+    username: "{{opentlc_login}}"
 
 - name: Remove secret
   file:
     name: /root/secret.pem
     state: absent
+
+...
 
