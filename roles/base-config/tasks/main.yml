@@ -9,6 +9,14 @@
     backup: yes
 
 - name: enable repos
- 
-- name: install base tools and packages
+  template:
+    src: repos_template.j2
+    dest: /etc/yum.repos.d/internal.repo
+    mode: 0644
 
+- name: install base tools and packages
+  yum:
+    name:
+      - vim
+      - bash-completion
+    state: latest
