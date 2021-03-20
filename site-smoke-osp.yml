@@ -1,11 +1,22 @@
 - hosts: workstation
   gather_facts: false
-  tasks:
-  - name: OpenStack servers
-  - name: Curl website
+  roles:
+    # Create inventory from Openstack instances
+    - name: osp-facts
 
-  - name: Fail if 'Ansible has done its job' is not in the page content
-    fail:
-    when: "'Ansible has done its job' not in webpage.results[0].content"
-    tags:
-      - osp.smoke
+  tasks:
+    - name: Curl website
+      uri:
+        url: http://{{hostvars[item]['inventory_hostname']}}
+        return_content: yes
+      register: webpage
+      until: webpage.status == 200
+      retries: 5
+      delay: 5
+      loop: "{{groups['frontends']}}"
+
+    - name: Fail if 'Ansible has done its job' is not in the page content
+      fail:
+      when: "'Ansible has done its job' not in webpage.results[0].content"
+      tags:
+        - osp.smoke
