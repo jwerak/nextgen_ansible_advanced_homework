@@ -12,10 +12,4 @@
     group:
       - "{{ item.metadata.deployment_name }}"
       - "{{ item.metadata.group }}"
-    #      ansible_ssh_private_key_file: ~/.ssh/openstack.pem
-    #  ansible_ssh_user: cloud-user
   with_items: "{{r_os_servers.openstack_servers}}"
-
-- name: Print groups
-  debug:
-    var: groups
