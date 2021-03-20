@@ -1,2 +1,9 @@
-payload:          tomcat
-tomcat_web_root:  /usr/share/tomcat/webapps/ROOT
+---
+__app_tier_packages:
+  - tomcat
+
+__app_tier_tomcat_web_root:  /usr/share/tomcat/webapps/ROOT
+
+__app_tier_tomcat_service_name: tomcat
+
+...

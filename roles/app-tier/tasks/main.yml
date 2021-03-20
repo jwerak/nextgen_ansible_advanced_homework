@@ -1,2 +1,24 @@
 ---
 
+- name: Install Packages needed for application deployment
+  yum:
+    name: "{{__app_tier_packages}}"
+    state: latest
+
+- name: Create directory for web application content
+  file:
+    path: "{{__app_tier_tomcat_web_root}}"
+    state: directory
+
+- name: Update web application html content
+  template:
+    src: index.html.j2
+    dest: "{{__app_tier_tomcat_web_root}}/index.html"
+  notify:
+    - restart tomcat
+
+- name: Start and enable tomcat service
+  service:
+    name: "{{__app_tier_tomcat_service_name}}"
+    state: started
+    enabled: true
