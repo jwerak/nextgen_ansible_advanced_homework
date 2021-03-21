@@ -1,23 +1,30 @@
+---
 - hosts: tag_AnsibleGroup_bastions
   gather_facts: true
   become: true
+
   tasks:
-  - name: Install required packages 
-    yum: 
-     name: "{{item}}"
-     state: latest 
-    loop: 
-      - python 
-      - python-pip 
-      - python-devel 
+  - name: Install required packages
+    yum:
+     name:
+      - python
+      - python-pip
+      - python-devel
       - gcc
+     state: latest
+
   - name: Install tower-cli
     pip:
      name: ansible-tower-cli
      state: latest
-  - name: List key files
-    shell: (cd /root/.ssh; find . -maxdepth 1 -type f -iname '*key.pem')| cut -d'/' -f2
-    register: file_to_copy
+
+  - name: Find private ssh key used for tower credential
+    find:
+      paths: /root/.ssh
+      recurse: no
+      patterns: '*key.pem'
+    register: ssh_private_key
+
   - name: Tower Creds key file
     tower_credential:
       name: Creds for AWS instances
@@ -28,8 +35,9 @@
       tower_username: admin
       tower_password: r3dh4t1!
       tower_verify_ssl: no
-      ssh_key_data: "/root/.ssh/{{ file_to_copy.stdout }}"
+      ssh_key_data: "{{ ssh_private_key.files[0].path }}"
       username: ec2-user
+
   - name: Update Prod Job template
     tower_job_template:
       name: "09_3 tier app on Prod"
@@ -42,6 +50,7 @@
       job_type: run
       playbook: site-3tier-app.yml
       project: "00_Homework Assignment"
+
   - name: Update Prod Smoke Job template
     tower_job_template:
       name: "10_Smoke test Prod env"
@@ -55,4 +64,4 @@
       playbook: site-smoketest-aws.yml
       project: "00_Homework Assignment"
 
-    
+...
