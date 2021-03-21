@@ -1,3 +1,9 @@
+---
+- name: Create tower config file
+  template:
+    src: tower_cli.j2
+    dest: "{{tower_cli_file_path}}"
+
 - name: Generate var file for order_svc.sh script
   template:
     src: aws_jq_vars.yml

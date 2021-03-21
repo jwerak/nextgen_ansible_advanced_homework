@@ -1,4 +1,8 @@
+---
 - hosts: workstation
+  gather_facts: false
   become: yes
+  vars_files:
+    - vars/qa_servers.yml
   roles:
-    - osp-instance-delete
+    - name: osp-instance-delete

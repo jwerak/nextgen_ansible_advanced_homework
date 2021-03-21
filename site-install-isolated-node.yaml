@@ -1,3 +1,4 @@
+---
 - hosts: localhost
   vars:
     OSP_GUID: "{{ lookup('env','OSP_GUID') }}"
@@ -18,4 +19,3 @@
     shell: /root/ansible-tower-setup-latest/setup.sh
     async: 3600
     poll: 36
-

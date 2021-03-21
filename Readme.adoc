@@ -3,6 +3,35 @@
 
 * From the cloned repo run `site-config-tower.yml` playbook to create job templates and workflow template.
 
+Update Ansible Tower WebUI admin password.
+
+Reset r3dh4t1! as admin password after sign-in using password provided in email.
+
+[source,bash]
+----
+cat <<EOF > ~/labrc
+export TOWER_GUID=<Tower env GUID>
+export OSP_GUID=<OSP Env GUID>
+export OSP_DOMAIN=<OSP Env domain name>
+export OPENTLC_ID=<username-example.com>
+export MAIL_ID=<username@example.com>
+export OPENTLC_PASSWORD=<Your OPENTLC Password>
+export GITHUB_REPO=https://github.com/<github username>/nextgen_ansible_advanced_homework.git
+export JQ_REPO_BASE=http://www.opentlc.com/download/ansible_bootcamp
+export REGION=us-east-1
+export VAULT_PASSWORD=r3dh4t1!
+export ANSIBLE_VAULT_PASSWORD_FILE=/root/.vault-pwd-file
+EOF
+----
+
+[source,bash]
+----
+source ~/labrc
+
+echo ${VAULT_PASSWORD} > ${ANSIBLE_VAULT_PASSWORD_FILE}
+
+ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=${OSP_GUID} -e osp_DOMAIN=${OSP_DOMAIN} -e opentlc_login=${OPENTLC_ID} -e path_to_opentlc_key=/root/.ssh/mykey.pem -e param_repo_base=${JQ_REPO_BASE} -e opentlc_password=${OPENTLC_PASSWORD} -e REGION_NAME=${REGION} -e EMAIL=${MAIL_ID} -e github_repo=${GITHUB_REPO} -e @vars/secrets.yml
+----
 
 
 .List of Playbooks
@@ -13,7 +42,7 @@
 | db-tier  | Install postgressql server for database role
 | lb-tier  | Install HA proxy role
 | base-config | Setup yum repo and base packages role
-| setup-workstation | Setup workstation, create network, ssh keypair, security group etc. role 
+| setup-workstation | Setup workstation, create network, ssh keypair, security group etc. role
 | osp-servers | Provision OSP Instances role
 | osp-instance-delete | Delete OSP Instances role
 | osp-facts | Genrate in-memory inventory for OSP instances role
