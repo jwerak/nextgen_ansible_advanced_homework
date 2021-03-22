@@ -6,8 +6,10 @@ scm_branch: master
 scm_url: "{{ github_repo }}"
 proj_name: "00_Homework Assignment"
 ssh_cred_name: "Connect_to_workstation"
+vault_cred_hw_name: "Homework Assignment vault password"
 user_cred_name: "cloud-user"
 user_cred_path: "/root/.ssh/openstack.pem"
+tower_cred_name: "Tower admin credential"
 static_inventory_name: scm_inventory
 instance_group_name: osp
 workflow_template_name: cicd_workflow

@@ -1,0 +1,17 @@
+---
+- name: Install required packages
+  yum:
+    name: "{{__tower_cli_packages_yum}}"
+    state: latest
+
+- name: Install tower-cli pip package
+  pip:
+    name: "{{__tower_cli_package_pip}}"
+    state: latest
+
+- name: Configure tower-cli.cfg file
+  template:
+    src: tower_cli.cfg.j2
+    dest: "{{__tower_cli_conf_file_path}}"
+
+...

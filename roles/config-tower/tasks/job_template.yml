@@ -46,6 +46,14 @@
   command: |
     tower-cli job_template create --name "{{job_template_aws_ssh_keys}}" --job-type run --inventory "{{ec2_dynamic_inventory}}" --project "{{proj_name}}" --playbook "{{aws_ssh_playbook}}" --credential "{{opentlc_cred_name}}" --extra-vars @/tmp/tower_info.yml
 
+- name: Associate credential to Job template for injecting AWS SSH keys
+  command: |
+    tower-cli job_template associate_credential --job-template "{{job_template_aws_ssh_keys}}" --credential "{{tower_cred_name}}"
+
+- name: Associate vault credential to Job template for injecting AWS SSH keys
+  command: |
+    tower-cli job_template associate_credential --job-template "{{job_template_aws_ssh_keys}}" --credential "{{vault_cred_hw_name}}"
+
 - name: Job template for checking AWS instances status
   command: |
     tower-cli job_template create --name "{{job_template_aws_status_check}}" --job-type run --inventory "{{ec2_dynamic_inventory}}" --project "{{proj_name}}" --playbook "{{aws_status_playbook}}" --credential "{{opentlc_cred_name}}"

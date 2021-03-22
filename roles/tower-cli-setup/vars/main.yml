@@ -1,0 +1,15 @@
+---
+__tower_cli_packages_yum:
+  - python
+  - python-pip
+  - python-devel
+  - gcc
+
+__tower_cli_package_pip: ansible-tower-cli
+
+__tower_cli_conf_file_path: "{{tower_cli_conf_file_path}}"
+__tower_cli_tower_host: "{{tower_cli_tower_host}}"
+__tower_cli_username: "{{tower_cli_username}}"
+__tower_cli_password: "{{tower_cli_password}}"
+__tower_cli_verify_ssl: "{{tower_cli_verify_ssl}}"
+...

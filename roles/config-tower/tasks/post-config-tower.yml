@@ -10,7 +10,7 @@
 
 - name: Vault Credential for project secrets file decryption
   tower_credential:
-    name: Homework Assignment vault password
+    name: "{{vault_cred_hw_name}}"
     organization: Default
     state: present
     kind: vault
@@ -29,7 +29,7 @@
 
 - name: Credential to connect as admin to Ansible Tower
   tower_credential:
-    name: Tower admin credential
+    name: "{{tower_cred_name}}"
     organization: Default
     state: present
     kind: tower

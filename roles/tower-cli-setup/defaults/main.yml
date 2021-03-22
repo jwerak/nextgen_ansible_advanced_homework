@@ -1,0 +1,7 @@
+---
+tower_cli_conf_file_path: /root/.tower_cli.cfg
+tower_cli_tower_host: tower1.{{tower_guid}}.example.opentlc.com
+tower_cli_username: admin
+tower_cli_password: secret_password
+tower_cli_verify_ssl: false
+...

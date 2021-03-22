@@ -1,67 +1,65 @@
 ---
-- hosts: tag_AnsibleGroup_bastions
-  gather_facts: true
+- name: Retrieve ssh private key from bastion host
+  hosts: tag_AnsibleGroup_bastions
+  gather_facts: false
   become: true
+  vars:
+    tower_host: tower1.{{tower_guid}}.example.opentlc.com
+  vars_files:
+    - vars/secrets.yml
+  roles:
+    - name: tower-cli-setup
 
   tasks:
-  - name: Install required packages
-    yum:
-     name:
-      - python
-      - python-pip
-      - python-devel
-      - gcc
-     state: latest
+    - name: Find private ssh key used for tower credential
+      find:
+        paths: /root/.ssh
+        recurse: no
+        patterns: '*key.pem'
+      register: ssh_private_key
 
-  - name: Install tower-cli
-    pip:
-     name: ansible-tower-cli
-     state: latest
+    - name: Register content of private ssh key
+      slurp:
+        src: "{{ssh_private_key.files[0].path}}"
+      register: ssh_private_key_base64
 
-  - name: Find private ssh key used for tower credential
-    find:
-      paths: /root/.ssh
-      recurse: no
-      patterns: '*key.pem'
-    register: ssh_private_key
+    - name: Create Tower ssh_key Credentials for AWS instances
+      tower_credential:
+        name: Creds for AWS instances
+        organization: Default
+        state: present
+        kind: ssh
+        username: ec2-user
+        ssh_key_data: "{{ssh_private_key_base64['content'] | b64decode}}"
+        tower_username: "{{tower_username}}"
+        tower_password: "{{tower_password}}"
+        tower_host: "{{tower_host}}"
+        tower_verify_ssl: false
 
-  - name: Tower Creds key file
-    tower_credential:
-      name: Creds for AWS instances
-      organization: Default
-      state: present
-      kind: ssh
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
-      tower_username: admin
-      tower_password: r3dh4t1!
-      tower_verify_ssl: no
-      ssh_key_data: "{{ ssh_private_key.files[0].path }}"
-      username: ec2-user
+    - name: Update Prod Job template 09_3 tier app on Prod
+      tower_job_template:
+        name: "09_3 tier app on Prod"
+        credential: "Creds for AWS instances"
+        state: present
+        job_type: run
+        playbook: site-3tier-app.yml
+        project: "00_Homework Assignment"
+        tower_username: "{{tower_username}}"
+        tower_password: "{{tower_password}}"
+        tower_host: "{{tower_host}}"
+        tower_verify_ssl: false
 
-  - name: Update Prod Job template
-    tower_job_template:
-      name: "09_3 tier app on Prod"
-      credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
-      tower_username: admin
-      tower_password: r3dh4t1!
-      tower_verify_ssl: no
-      state: present
-      job_type: run
-      playbook: site-3tier-app.yml
-      project: "00_Homework Assignment"
-
-  - name: Update Prod Smoke Job template
-    tower_job_template:
-      name: "10_Smoke test Prod env"
-      credential: "Creds for AWS instances"
-      tower_host: tower1.{{tower_guid}}.example.opentlc.com
-      tower_username: admin
-      tower_password: r3dh4t1!
-      tower_verify_ssl: no
-      state: present
-      job_type: run
-      playbook: site-smoketest-aws.yml
-      project: "00_Homework Assignment"
+    - name: Update Prod Job template 10_Smoke test Prod env
+      tower_job_template:
+        name: "10_Smoke test Prod env"
+        credential: "Creds for AWS instances"
+        state: present
+        job_type: run
+        playbook: site-smoketest-aws.yml
+        project: "00_Homework Assignment"
+        tower_username: "{{tower_username}}"
+        tower_password: "{{tower_password}}"
+        tower_host: "{{tower_host}}"
+        tower_verify_ssl: false
 
 ...
