@@ -1,3 +1,4 @@
+---
 - project: "{{proj_name}}"
   success:
   - job_template: "{{job_template_aws_provision}}"
@@ -20,7 +21,4 @@
               - job_template: "{{job_template_name_3tier_app_aws}}"
                 success:
                 - job_template: "{{job_template_smoke_aws}}"
-             
-
-
-
+...
