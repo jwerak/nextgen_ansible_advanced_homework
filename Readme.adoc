@@ -66,3 +66,7 @@ ansible-playbook site-config-tower.yml -e tower_GUID=${TOWER_GUID} -e osp_GUID=$
 | roles/config-tower/tasks/workflow_template.yml | genrate workflow from `workflow.yml` file
 | roles/config-tower/tasks/post-config-tower.yml | any post config jobs
 |===
+
+Grading
+
+THREE_TIER_GUID=<THREE_TIER_GUID> ansible-playbook grading-script.yml

@@ -17,15 +17,26 @@
     tower_config_file: "{{tower_cli_file_path}}"
     vault_password: "{{vault_password}}"
 
-- name: Machine Credentail to connect to workstation using openstack.pub
+- name: Machine Credential to connect to workstation using openstack.pub
   tower_credential:
-    name: Connect_to_workstation
+    name: Workstation machine credential
     organization: Default
     state: present
     kind: ssh
     tower_config_file: "{{tower_cli_file_path}}"
     ssh_key_data: "/root/.ssh/openstack.pem"
     username: cloud-user
+
+- name: Credential to connect as admin to Ansible Tower
+  tower_credential:
+    name: Tower admin credential
+    organization: Default
+    state: present
+    kind: tower
+    tower_password: "{{tower_password}}"
+    tower_username: "{{tower_username}}"
+    tower_host: tower1.{{tower_GUID}}.example.opentlc.com
+    tower_config_file: "{{tower_cli_file_path}}"
 
 - name: Add tower inventory
   tower_inventory:
@@ -63,7 +74,7 @@
     organization: Default
     state: present
     kind: ssh
-    ssh_key_data: /root/.ssh/mykey.pem
+    ssh_key_data: "{{lookup('file', path_to_opentlc_key)}}"
     username: "{{opentlc_login}}"
     tower_config_file: "{{tower_cli_file_path}}"
 

@@ -1,3 +1,4 @@
+---
 - hosts: all
   gather_facts: false
   tasks:
@@ -10,4 +11,3 @@
     delegate_to: localhost
     with_items:
       - "{{ inventory_hostname }}"
-        

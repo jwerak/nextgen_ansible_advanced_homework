@@ -9,6 +9,7 @@
 - name: Add host
   add_host:
     name: "{{ item.public_v4 }}"
+    private_ip_address: "{{ item.private_v4 }}"
     group:
       - "{{ item.metadata.deployment_name }}"
       - "{{ item.metadata.group }}"
