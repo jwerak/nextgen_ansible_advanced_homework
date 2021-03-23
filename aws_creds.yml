@@ -1,6 +1,6 @@
 ---
 - name: Retrieve ssh private key from bastion host
-  hosts: tag_AnsibleGroup_bastions
+  hosts: bastions
   gather_facts: false
   become: true
   vars:

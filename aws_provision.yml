@@ -47,7 +47,6 @@
         - "{{ order_script_file_path }}"
 
     # Using this script will always deploy environments in the us-east-1 region.
-    # TODO: this shell task is not working yet!
     - name: order service on opentlc
       shell: source "{{ credentials_file_path }}"; "{{ order_script_file_path }}" -y -c 'OPENTLC Automation' -i 'Ansible Advanced - Three Tier App' -t 1 -d 'dialog_expiration=7;region=na;nodes=1;dialog_runtime=8;notes=Training - As part of course'
       args:

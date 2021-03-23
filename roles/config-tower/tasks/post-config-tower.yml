@@ -68,7 +68,7 @@
   command: |
     tower-cli host associate --host "{{host_name}}" --group "{{group_name}}"
 
-- name: Tower Creds key file
+- name: Add opentlc ssh key as Tower Credential {{opentlc_cred_name}}
   tower_credential:
     name: "{{opentlc_cred_name}}"
     organization: Default
