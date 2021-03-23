@@ -5,6 +5,30 @@ This repository contains Ansible roles and playbooks to:
 - deploy Infrastructure for QA and Prod environments
 - deploy 3-tier application to QA and Prod environments and check application health with smoke test.
 
+## TOC
+
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Ansible Advanced - Homework](#ansible-advanced---homework)
+    - [TOC](#toc)
+    - [Prerequisites](#prerequisites)
+        - [On Control node](#on-control-node)
+            - [Prepare controller node](#prepare-controller-node)
+            - [Prepare Workstation as isolated group node](#prepare-workstation-as-isolated-group-node)
+    - [Setup Tower environment](#setup-tower-environment)
+    - [Start deployment to qa and prod environments](#start-deployment-to-qa-and-prod-environments)
+    - [Project components](#project-components)
+        - [Playbooks](#playbooks)
+        - [Roles](#roles)
+    - [Notes](#notes)
+    - [Future work recommendation](#future-work-recommendation)
+        - [Ansible Tower objects creation](#ansible-tower-objects-creation)
+        - [Commands to create Ansible tower objects](#commands-to-create-ansible-tower-objects)
+        - [split setup-workstation role](#split-setup-workstation-role)
+
+<!-- markdown-toc end -->
+
 ## Prerequisites
 
 ### On Control node
@@ -47,7 +71,24 @@ Update the secrets file with your credentials.
 echo ${VAULT_PASSWORD} > ${ANSIBLE_VAULT_PASSWORD_FILE}
 ```
 
+#### Prepare controller node
+
+``` bash
+mv ~/ansible-tower-setup-*/ ~/ansible-tower-setup-latest
+cp /etc/ansible/hosts ~/ansible-tower-setup-latest/inventory
+chmod 0400 /root/.ssh/openstack.pem
+ansible-playbook site-setup-prereqs.yaml -k
+```
+
+#### Prepare Workstation as isolated group node
+
+``` bash
+ansible-playbook site-setup-workstation.yaml
+```
+
 ## Setup Tower environment
+
+Reset *r3dh4t1!* as admin password after sign-in using password provided in email.
 
 ```bash
 ansible-playbook site-config-tower.yml \
@@ -127,3 +168,7 @@ Recommendation is to create Role for tower object creation that would specify ge
 Some commands used to create Ansible Tower objects will only create resources, but won't update them.
 
 Recommendation is to migrate to modules from *ansible.tower* collection.
+
+### split setup-workstation role
+
+*setup-workstation* role is responsible for many unrelated tasks. Split the role to several smaller roles.

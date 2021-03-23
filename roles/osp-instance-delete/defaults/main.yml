@@ -1,2 +1,4 @@
 ---
 # defaults file for roles/osp-instance-delete
+osp_cloud: 'openstack'
+osp_servers: []

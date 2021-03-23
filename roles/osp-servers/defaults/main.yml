@@ -1,2 +1,4 @@
 ---
 # defaults file for osp.servers
+osp_cloud: 'openstack'
+osp_servers: []

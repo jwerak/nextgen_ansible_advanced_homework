@@ -1,16 +1,19 @@
 - name: Setup SSH keys for cloud-user
   authorized_key:
-     user: cloud-user
-     state: present
-     key: http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
-- name: Install required packages 
-  yum: 
-     name:
-       - python3
-       - git
-     state: latest 
+    user: cloud-user
+    state: present
+    key: http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/openstack.pub
+
+- name: Install required packages
+  yum:
+    name:
+      - python3
+      - git
+    state: latest
+
 - name: Install openstack library
   command: pip3 install ansible==2.9.7 openstacksdk==0.12.0  cryptography==3.0
+
 - name: Create clouds.yaml file
   blockinfile:
     create: yes
