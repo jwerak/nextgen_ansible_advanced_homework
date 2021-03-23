@@ -24,8 +24,8 @@
     state: present
     kind: ssh
     tower_config_file: "{{tower_cli_file_path}}"
-    ssh_key_data: "/root/.ssh/openstack.pem"
-    username: cloud-user
+    ssh_key_data: "{{lookup('file', user_cred_path)}}"
+    username: "{{workstation_user_cred_name}}"
 
 - name: Credential to connect as admin to Ansible Tower
   tower_credential:
@@ -35,7 +35,7 @@
     kind: tower
     tower_password: "{{tower_password}}"
     tower_username: "{{tower_username}}"
-    tower_host: tower1.{{tower_GUID}}.example.opentlc.com
+    tower_host: tower1.{{tower_guid}}.example.opentlc.com
     tower_config_file: "{{tower_cli_file_path}}"
 
 - name: Add tower inventory
@@ -78,8 +78,4 @@
     username: "{{opentlc_login}}"
     tower_config_file: "{{tower_cli_file_path}}"
 
-- name: Remove secret
-  file:
-    name: /root/secret.pem
-    state: absent
 ...

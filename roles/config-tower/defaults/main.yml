@@ -1,2 +1,3 @@
 ---
 # defaults file for roles/config-tower
+tower_cli_file_path: /root/.tower_cli.cfg

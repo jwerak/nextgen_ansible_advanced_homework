@@ -1,6 +1,14 @@
 ---
 - hosts: localhost
+  connection: local
   gather_facts: false
-  become: yes
+  become: false
   roles:
-    - config-tower
+    - name: tower-cli-setup
+      vars:
+        tower_cli_conf_file_path: /root/.tower_cli.cfg
+        tower_cli_password: "{{tower_password}}"
+        tower_cli_tower_host: tower1.{{tower_guid}}.example.opentlc.com
+    - name: config-tower
+      vars:
+        tower_cli_conf_file_path: /root/.tower_cli.cfg

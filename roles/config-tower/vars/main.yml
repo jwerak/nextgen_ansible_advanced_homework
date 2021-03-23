@@ -1,14 +1,13 @@
 ---
 # vars file for roles/config-tower
-tower_cli_file_path: /root/.tower_cli.cfg
 org_name: Default
 scm_branch: master
 scm_url: "{{ github_repo }}"
 proj_name: "00_Homework Assignment"
 ssh_cred_name: "Connect_to_workstation"
 vault_cred_hw_name: "Homework Assignment vault password"
-user_cred_name: "cloud-user"
-user_cred_path: "/root/.ssh/openstack.pem"
+workstation_user_cred_name: "cloud-user"
+workstation_user_cred_path: "/root/.ssh/openstack.pem"
 tower_cred_name: "Tower admin credential"
 static_inventory_name: scm_inventory
 instance_group_name: osp
@@ -16,7 +15,7 @@ workflow_template_name: cicd_workflow
 job_template_name_osp_instances: "02_Provision QA Env"
 osp_instances_playbook: site-osp-instances.yml
 group_name: workstation
-host_name: workstation-{{osp_GUID}}.{{osp_DOMAIN}}
+host_name: workstation-{{osp_guid}}.{{osp_domain}}
 job_template_name_3tier_app: "04_3tier app deployment on QA Env"
 app_deploy_playbook: site-3tier-app.yml
 vault_name: yum_repo_vault
