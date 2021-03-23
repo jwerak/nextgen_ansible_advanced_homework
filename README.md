@@ -72,7 +72,57 @@ Start Workflow Template *cicd_workflow* in order to trigger environments creatio
 
 Go to Ansible Tower -> Templates -> find cid_workflow -> launch.
 
-## Note
+## Project components
+
+### Playbooks
+
+| Job Template                              | Playbook name          | Purpose                                                                                                       |
+|-------------------------------------------|------------------------|---------------------------------------------------------------------------------------------------------------|
+| 01_Provision Prod Env                     | aws_provision.yml      | Provision production environment in AWS                                                                       |
+| 02_Provision QA Env                       | site-osp-instances.yml | Provision QA environment in OpenStack                                                                         |
+| 04_3tier app deployment on QA Env         | site-3tier-app.yml     | Deploy three tier application to QA                                                                           |
+| 05_Smoke test QA Env                      | site-smoke-osp.yml     | Playbook to test three tier app on OSP                                                                        |
+| 07_Prod Check the status of AWS instances | aws_status_check.yml   | Check aws instances are up or not                                                                             |
+| 08_Prod SSH keys three tier app           | aws_creds.yml          | Use ssh private key from AWS bastion host and use it to create machine credential to connect to AWS instances |
+| 09_3 tier app on Prod                     | site-3tier-app.yml     | Deploy three tier application to Production                                                                   |
+| 10_Smoke test Prod env                    | site-smoketest-aws.yml | test three tier app on AWS                                                                                    |
+| Nuke QA Env                               | site-osp-delete.yml    | Delete QA OpenStack instances                                                                                 |
+| Executed on controller node only          | site-config-tower.yml  | Configure Ansible Tower with jobs from this project                                                           |
+| Executed on controller node only          | site-setup-prereqs.yml | Configure Ansible Tower to use isolated node                                                                  |
+| Executed on controller node only          | grading-script.yml     | Self grading script                                                                                           |
+
+### Roles
+
+Basic overview of roles.
+Documentation is part of each role.
+
+| Playbook name       | Purpose                                                                  |
+|---------------------|--------------------------------------------------------------------------|
+| app-tier            | Install application on server                                            |
+| db-tier             | Install postgresql server                                                |
+| lb-tier             | Install HA proxy server                                                  |
+| base-config         | Setup yum repo and base packages role                                    |
+| setup-workstation   | Setup workstation, create network, ssh keypair, security group etc. role |
+| osp-servers         | Provision OSP Instances role                                             |
+| osp-instance-delete | Delete OSP Instances role                                                |
+| osp-facts           | Generate in-memory inventory for OSP instances role                      |
+| tower-cli-setup     | Install tower-cli and create config file                                 |
+| config-tower        | Role to configure ansible tower job templates and workflow               |
+
+## Notes
 
 Connection to prod bastion instance didn't work for my IdM user, therefore step **08_Prod SSH keys three tier app** failed.
 To overcome this, copy manually your ssh keys to bastion host and re-run the workflow from failed step or from start.
+
+## Future work recommendation
+
+### Ansible Tower objects creation
+
+Currently creation of Ansible Tower Objects, such as Job Templates, credentials, etc is very static and ansible code is not being re-used.
+Recommendation is to create Role for tower object creation that would specify general variables structure as input for Job Templates creation.
+
+### Commands to create Ansible tower objects
+
+Some commands used to create Ansible Tower objects will only create resources, but won't update them.
+
+Recommendation is to migrate to modules from *ansible.tower* collection.
