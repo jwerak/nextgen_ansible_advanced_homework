@@ -119,6 +119,7 @@ To overcome this, copy manually your ssh keys to bastion host and re-run the wor
 ### Ansible Tower objects creation
 
 Currently creation of Ansible Tower Objects, such as Job Templates, credentials, etc is very static and ansible code is not being re-used.
+This requires major restructuring of config-tower role which is out of scope of this 8-hours engagement.
 Recommendation is to create Role for tower object creation that would specify general variables structure as input for Job Templates creation.
 
 ### Commands to create Ansible tower objects
